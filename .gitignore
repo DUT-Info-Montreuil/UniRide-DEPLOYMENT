@@ -1,7 +1,6 @@
+#Certificates
 certs/*.crt
 certs/*.key
-
-
 
 #Documents
 documents/
