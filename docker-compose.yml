@@ -22,7 +22,11 @@ services:
     restart: always
     #This volume is used to store the uploaded files and the certificates
     volumes:
-      - ./documents/:/usr/src/app/documents
+      - ./documents/id_card/:/usr/src/app/documents/id_card
+      - ./documents/insurance/:/usr/src/app/documents/insurance
+      - ./documents/license/:/usr/src/app/documents/license
+      - ./documents/pft/:/usr/src/app/documents/pft
+      - ./documents/school_certificate/:/usr/src/app/documents/school_certificate
       - ./certs/:/usr/src/app/uniride_sme/certs
     depends_on:
       - uniride_redis
@@ -43,13 +47,11 @@ services:
 #This container is used to store the data
   uniride_db:
     container_name: uniride_db
-    image: postgres
+    image: uniride1/uniride_bdd #automatically latest
     restart: always
     env_file:
       - ./env/uniride-db-template.env
     volumes:
-      - "./db-script/schema_uniride.sql:/docker-entrypoint-initdb.d/script.sql" #init script
-      - "./db-script/insertion_uniride.sql:/docker-entrypoint-initdb.d/zscript.sql" #insert default data
       - ./postgres-data:/var/lib/postgresql/data #data storage, to keep the data after the container is stopped (need to create the folder before if not exist)
 
 #This container is used to get the pgadmin

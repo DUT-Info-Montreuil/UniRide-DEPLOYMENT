@@ -1,2 +1,9 @@
+#Certificates
 certs/*.crt
 certs/*.key
+
+#Documents
+documents/
+
+# Databases save
+postgres-data/
