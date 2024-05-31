@@ -14,6 +14,8 @@ services:
       - uniride_backend
     volumes:
       - ./certs/:/app/certs
+    env_file: #This file contains the environment variables, cause the image is not built with them
+      - ./env/uniride-frontend-template.env
 
 #This container is used to get the backend
   uniride_backend:
