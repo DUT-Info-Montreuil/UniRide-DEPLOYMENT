@@ -27,11 +27,11 @@ services:
     restart: always
     #This volume is used to store the uploaded files and the certificates
     volumes:
-      - ${SERVER_ID_CARD_FOLDER}:/usr/src/app/documents/id_card
-      - ${SERVER_INSURANCE_FOLDER}:/usr/src/app/documents/insurance
-      - ${SERVER_LICENCE_FOLDER}:/usr/src/app/documents/license
-      - ${SERVER_PFT_FOLDER}:/usr/src/app/documents/pft
-      - ${SERVER_SCHOOL_CERTIFICATE_FOLDER}:/usr/src/app/documents/school_certificate
+      - ./documents/id_card/:/usr/src/app/documents/id_card
+      - ./documents/insurance/:/usr/src/app/documents/insurance
+      - ./documents/license/:/usr/src/app/documents/license
+      - ./documents/pft/:/usr/src/app/documents/pft
+      - ./documents/school_certificate/:/usr/src/app/documents/school_certificate
       - ${SERVER_CERTS_FOLDER}:/usr/src/app/uniride_sme/certs
     depends_on:
       - uniride_redis
@@ -95,7 +95,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      - ${SERVER_POSTGRES_DATA_FOLDER}:/var/lib/postgresql/data #data storage, to keep the data after the container is stopped (need to create the folder before if not exist)
+      - ./postgres-data:/var/lib/postgresql/data #data storage, to keep the data after the container is stopped (need to create the folder before if not exist)
 
 x-environment:
   COMPOSE_PROJECT_NAME: uniride
