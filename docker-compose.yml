@@ -13,7 +13,7 @@ services:
     depends_on:
       - uniride_backend
     volumes:
-      - ./certs/:/app/certs
+      - ./certs/:/app/src/app/certs
     env_file: #This file contains the environment variables, cause the image is not built with them
       - ./env/uniride-frontend-template.env
 
