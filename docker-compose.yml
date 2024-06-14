@@ -13,7 +13,7 @@ services:
     depends_on:
       - uniride_backend
     volumes:
-      - certs_volume:/app/src/app/certs
+      - ${SERVER_CERTS_FOLDER}:/app/src/app/certs
     environment:
       - production=true
       - backUrl=${backUrl}
@@ -27,12 +27,12 @@ services:
     restart: always
     #This volume is used to store the uploaded files and the certificates
     volumes:
-      - id_card_volume:/usr/src/app/documents/id_card
-      - insurance_volume:/usr/src/app/documents/insurance
-      - license_volume:/usr/src/app/documents/license
-      - pft_volume:/usr/src/app/documents/pft
-      - school_certificate_volume:/usr/src/app/documents/school_certificate
-      - certs_volume:/usr/src/app/uniride_sme/certs
+      - ${SERVER_ID_CARD_FOLDER}:/usr/src/app/documents/id_card
+      - ${SERVER_INSURANCE_FOLDER}:/usr/src/app/documents/insurance
+      - ${SERVER_LICENCE_FOLDER}:/usr/src/app/documents/license
+      - ${SERVER_PFT_FOLDER}:/usr/src/app/documents/pft
+      - ${SERVER_SCHOOL_CERTIFICATE_FOLDER}:/usr/src/app/documents/school_certificate
+      - ${SERVER_CERTS_FOLDER}:/usr/src/app/uniride_sme/certs
     depends_on:
       - uniride_redis
       - uniride_db
@@ -95,51 +95,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      - postgres_data:/var/lib/postgresql/data #data storage, to keep the data after the container is stopped (need to create the folder before if not exist)
+      - ${SERVER_POSTGRES_DATA_FOLDER}:/var/lib/postgresql/data #data storage, to keep the data after the container is stopped (need to create the folder before if not exist)
 
 x-environment:
   COMPOSE_PROJECT_NAME: uniride
-
-volumes:
-  certs_volume:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${SERVER_CERTS_FOLDER}
-      o: bind
-  id_card_volume:
-    driver: local
-    driver_opts:
-      type: none
-      device: ./documents/id_card
-      o: bind
-  insurance_volume:
-    driver: local
-    driver_opts:
-      type: none
-      device: ./documents/insurance
-      o: bind
-  license_volume:
-    driver: local
-    driver_opts:
-      type: none
-      device: ./documents/license
-      o: bind
-  pft_volume:
-    driver: local
-    driver_opts:
-      type: none
-      device: ./documents/pft
-      o: bind
-  school_certificate_volume:
-    driver: local
-    driver_opts:
-      type: none
-      device: ./documents/school_certificate
-      o: bind
-  postgres_data:
-    driver: local
-    driver_opts:
-      type: none
-      device: ./postgres-data
-      o: bind
