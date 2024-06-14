@@ -13,11 +13,11 @@ services:
     depends_on:
       - uniride_backend
     volumes:
-      - ./certs/:/app/src/app/certs
+      - ${SERVER_CERTS_FOLDER}:/app/src/app/certs
     environment:
       - production=true
-      - backUrl=${BACK_URL}
-      - frontUrl=${FRONT_URL}
+      - backUrl=${backUrl}
+      - frontUrl=${frontUrl}
       - googleKey=${GOOGLE_API_KEY}
 
 #This container is used to get the backend
@@ -32,7 +32,7 @@ services:
       - ./documents/license/:/usr/src/app/documents/license
       - ./documents/pft/:/usr/src/app/documents/pft
       - ./documents/school_certificate/:/usr/src/app/documents/school_certificate
-      - ./certs/:/usr/src/app/uniride_sme/certs
+      - ${SERVER_CERTS_FOLDER}:/usr/src/app/uniride_sme/certs
     depends_on:
       - uniride_redis
       - uniride_db
@@ -99,3 +99,47 @@ services:
 
 x-environment:
   COMPOSE_PROJECT_NAME: uniride
+
+volumes:
+  certs_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${SERVER_CERTS_FOLDER}
+      o: bind
+  id_card_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./documents/id_card
+      o: bind
+  insurance_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./documents/insurance
+      o: bind
+  license_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./documents/license
+      o: bind
+  pft_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./documents/pft
+      o: bind
+  school_certificate_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./documents/school_certificate
+      o: bind
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./postgres-data
+      o: bind
