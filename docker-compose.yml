@@ -13,9 +13,12 @@ services:
     depends_on:
       - uniride_backend
     volumes:
-      - ./certs/:/app/certs
-    env_file: #This file contains the environment variables, cause the image is not built with them
-      - ./env/uniride-frontend-template.env
+      - ${SERVER_CERTS_FOLDER}:/app/src/app/certs
+    environment:
+      - production=true
+      - backUrl=${backUrl}
+      - frontUrl=${frontUrl}
+      - googleKey=${GOOGLE_API_KEY}
 
 #This container is used to get the backend
   uniride_backend:
@@ -29,14 +32,50 @@ services:
       - ./documents/license/:/usr/src/app/documents/license
       - ./documents/pft/:/usr/src/app/documents/pft
       - ./documents/school_certificate/:/usr/src/app/documents/school_certificate
-      - ./certs/:/usr/src/app/uniride_sme/certs
+      - ${SERVER_CERTS_FOLDER}:/usr/src/app/uniride_sme/certs
     depends_on:
       - uniride_redis
       - uniride_db
     ports:
       - "5050:5050"
-    env_file: #This file contains the environment variables, cause the image is not built with them
-      - ./env/uniride-backend-template.env
+    environment:
+      - BACK_URL=${backUrl}
+      - FRONT_URL=${frontUrl}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - UNIVERSITY_STREET_NUMBER=${UNIVERSITY_STREET_NUMBER}
+      - UNIVERSITY_STREET_NAME=${UNIVERSITY_STREET_NAME}
+      - UNIVERSITY_POSTAL_CODE=${UNIVERSITY_POSTAL_CODE}
+      - UNIVERSITY_CITY=${UNIVERSITY_CITY}
+      - UNIVERSITY_EMAIL_DOMAIN=${UNIVERSITY_EMAIL_DOMAIN}
+      - FRONT_END_URL=${FRONT_END_URL}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_SERVER=${MAIL_SERVER}
+      - MAIL_EXPIRATION=${MAIL_EXPIRATION}
+      - SECRET_KEY=${SECRET_KEY}
+      - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
+      - JWT_SALT=${JWT_SALT}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_ACCESS_TOKEN_EXPIRES=${JWT_ACCESS_TOKEN_EXPIRES}
+      - JWT_ACCESS_TOKEN_REFRESH=${JWT_ACCESS_TOKEN_REFRESH}
+      - JWT_REFRESH_TOKEN_EXPIRES=${JWT_REFRESH_TOKEN_EXPIRES}
+      - RQ_REDIS_URL=${RQ_REDIS_URL}
+      - CACHE_REDIS_HOST=${CACHE_REDIS_HOST}
+      - CACHE_REDIS_PORT=${CACHE_REDIS_PORT}
+      - CACHE_REDIS_PASSWORD=${CACHE_REDIS_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PWD=${DB_PWD}
+      - DB_PORT=${DB_PORT}
+      - FLASK_HOST=${FLASK_HOST}
+      - FLASK_PORT=${FLASK_PORT}
+      - CERTIFICATE_CRT_FOLDER=${CERTIFICATE_CRT_FOLDER}
+      - CERTIFICATE_KEY_FOLDER=${CERTIFICATE_KEY_FOLDER}
+      - FLASK_DEBUG=${FLASK_DEBUG}
 
 #This container is used to add cache to the backend
   uniride_redis:
@@ -51,8 +90,10 @@ services:
     container_name: uniride_db
     image: uniride1/uniride_bdd #automatically latest
     restart: always
-    env_file:
-      - ./env/uniride-db-template.env
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - ./postgres-data:/var/lib/postgresql/data #data storage, to keep the data after the container is stopped (need to create the folder before if not exist)
 
